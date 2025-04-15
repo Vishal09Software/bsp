@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Invoice Designer</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .invoice-page {
+        width: 210mm;
+        height: 297mm;
+        position: relative;
+        border: 5px solid #000;
+        margin: 0 auto;
+      }
+      @page {
+        size: A4;
+        margin: 0;
+      }
+      @media print {
+        body {
+          margin: 0;
+          padding: 0;
+        }
+        .no-print {
+          display: none !important;
+        }
+        .invoice-page {
+          width: 100%;
+          height: 100%;
+          margin: 0;
+          box-shadow: none;
+          border: 3px solid #000;
+        }
+        table {
+          border-collapse: collapse;
+          width: 100%;
+        }
+        th, td {
+          border: 3px solid #000;
+          text-align: center;
+          padding: 8px;
+        }
+      }
+    }
+  </style>
+</head>
+<body class="bg-gray-100 p-4 md:p-6">
+  <div class="container mx-auto">
+    <div class="flex flex-col lg:flex-row gap-6">
+      <!-- Form Section -->
+      <div class="w-full lg:w-5/12 no-print">
+        <div class="bg-white rounded-lg shadow p-6 h-[calc(100vh-2rem)] overflow-y-auto border border-gray-300">
+          <div class="flex justify-between items-center mb-6 sticky top-0 bg-white pb-4 border-b border-gray-300">
+            <h2 class="text-2xl font-bold text-gray-800">Invoice Inputs</h2>
+            <button onclick="generatePDF()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors border border-blue-700">
+              Download PDF
+            </button>
+          </div>
+
+          <div class="space-y-4">
+            <!-- Form inputs remain the same -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Company Name</label>
+              <input type="text" id="companyName" oninput="updateInvoice()" 
+                class="w-full px-3 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <input type="text" id="companyEmail" oninput="updateInvoice()" 
+                class="w-full px-3 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Address</label>
+              <textarea id="companyAddress" oninput="updateInvoice()" rows="2"
+                class="w-full px-3 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+            </div>
+
+            <hr class="my-4 border-2 border-gray-200">
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Invoice No</label>
+              <input type="text" id="invoiceNo" oninput="updateInvoice()" 
+                class="w-full px-3 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Date</label>
+              <input type="date" id="invoiceDate" oninput="updateInvoice()" 
+                class="w-full px-3 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <hr class="my-4 border-2 border-gray-200">
+
+            <h3 class="text-lg font-semibold text-gray-800">Enter Particulars</h3>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Total Amount</label>
+              <input type="number" id="totalAmount" oninput="processParticulars()" 
+                class="w-full px-3 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Items (comma separated)</label>
+              <input type="text" id="itemsInput" oninput="processParticulars()" 
+                class="w-full px-3 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Preview Section -->
+      <div class="w-full lg:w-7/12 no-print">
+        <div class="bg-gray-200 p-4 rounded-lg shadow-inner h-[calc(170vh-2rem)] border-2 border-gray-300">
+          <div class="h-full">
+            <div class="invoice-page bg-white shadow-md mx-auto" id="invoicePreview">
+              <div class="p-10 h-full flex flex-col">
+                <!-- Header -->
+                <div class="text-center mb-8 border-b-2 border-gray-300 pb-4">
+                  <h1 id="pCompanyName" class="text-3xl font-bold text-gray-800">Demo Company Pvt. Ltd.</h1>
+                  <div id="pCompanyEmail" class="text-gray-600 mt-1">demo@company.com</div>
+                  <div id="pCompanyAddress" class="text-gray-600">123 Business Rd, Business City</div>
+                </div>
+
+                <!-- Invoice Info -->
+                <div class="flex justify-between mb-8 ">
+                  <div class="text-gray-700">Invoice No: <span id="pInvoiceNo" class="font-semibold">---</span></div>
+                  <div class="text-gray-700">Date: <span id="pInvoiceDate" class="font-semibold">---</span></div>
+                </div>
+
+                <!-- Client Info -->
+                <div class="mb-8 text-gray-800 border-b-2 border-gray-300 pb-4">
+                  <div>Name: <strong>भारतीय सामाजिक पार्टी</strong></div>
+                </div>
+
+                <!-- Items Table -->
+                <div class="flex-grow">
+                    <table class="w-full border-collapse">
+                      <thead>
+                        <tr class="bg-gray-100">
+                          <th class="py-3 px-4 border border-gray-800 text-left font-semibold text-gray-700 w-1/12">S.No</th>
+                          <th class="py-3 px-4 border border-gray-800 text-left font-semibold text-gray-700 w-7/12">Particulars</th>
+                          <th class="py-3 px-4 border border-gray-800 text-right font-semibold text-gray-700 w-4/12">Amount</th>
+                        </tr>
+                      </thead>
+                  
+                      <!-- Products List -->
+                      <tbody id="productsBody">
+                        <tr>
+                          <td colspan="3" class="py-4 px-4 border border-gray-800 text-center text-gray-500">No Items Added</td>
+                        </tr>
+                      </tbody>
+                  
+                      <!-- Totals and Summary -->
+                      <tbody>
+                        <tr>
+                          <td colspan="2" class="py-3 px-4 border border-gray-800 text-right font-semibold text-gray-700">Discount:</td>
+                          <td class="py-3 px-4 border border-gray-800 text-right text-gray-700">₹<span id="discountAmount">0.00</span></td>
+                        </tr>
+                        <tr>
+                          <td colspan="2" class="py-3 px-4 border border-gray-800 text-right font-semibold text-gray-700">Freight Charges:</td>
+                          <td class="py-3 px-4 border border-gray-800 text-right text-gray-700">₹<span id="freightAmount">0.00</span></td>
+                        </tr>
+                        <tr class="bg-gray-100">
+                          <td colspan="2" class="py-3 px-4 border border-gray-800 text-right font-semibold text-gray-700">
+                            <em id="totalInWords">Zero Rupees Only</em>
+                          </td>
+                          <td class="py-3 px-4 border border-gray-800 text-right text-gray-700">
+                            <div class="font-semibold">Grand Total: ₹<span id="grandTotal" class="font-bold">0.00</span></div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  
+                  
+
+                <!-- Footer -->
+                <div class="mt-auto">
+                  <div class="flex flex-wrap border-t border-gray-300 pt-6">
+                    <div class="w-full md:w-7/12 pr-4">
+                      <h4 class="font-semibold text-gray-800 mb-2">Terms & Conditions:</h4>
+                      <table class="w-full text-sm text-gray-700">
+                        <tr>
+                          <td class="py-1">1.</td>
+                          <td>Goods once sold will not be taken back</td>
+                        </tr>
+                        <tr>
+                          <td class="py-1">2.</td>
+                          <td>No responsibility for breakages during transit</td>
+                        </tr>
+                        <tr>
+                          <td class="py-1">3.</td>
+                          <td>All disputes are subject to Mumbai Jurisdiction only</td>
+                        </tr>
+                        <tr>
+                          <td class="py-1">4.</td>
+                          <td>E.&O.E.</td>
+                        </tr>
+                      </table>
+                    </div>
+                    <div class="w-full md:w-5/12 mt-4 md:mt-0 text-right">
+                      <div class="text-gray-700">For and on behalf of</div>
+                      <div id="pCompanyNameFooter" class="font-semibold text-gray-800 mt-1">Demo Company Pvt. Ltd.</div>
+                      <div class="mt-8 text-gray-700">Authorized Signatory</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JS Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <script>
+    function updateInvoice() {
+      const name = document.getElementById('companyName').value || "Demo Company Pvt. Ltd.";
+      const email = document.getElementById('companyEmail').value || "demo@company.com";
+      const address = document.getElementById('companyAddress').value || "123 Business Rd, Business City";
+
+      document.getElementById('pCompanyName').textContent = name;
+      document.getElementById('pCompanyEmail').textContent = email;
+      document.getElementById('pCompanyAddress').textContent = address;
+      document.getElementById('pCompanyNameFooter').textContent = name;
+
+      document.getElementById('pInvoiceNo').textContent = document.getElementById('invoiceNo').value || "---";
+      
+      const dateInput = document.getElementById('invoiceDate').value;
+      if (dateInput) {
+        const date = new Date(dateInput);
+        document.getElementById('pInvoiceDate').textContent = date.toLocaleDateString('en-IN');
+      } else {
+        document.getElementById('pInvoiceDate').textContent = "---";
+      }
+    }
+
+    function processParticulars() {
+      const totalAmount = parseFloat(document.getElementById('totalAmount').value);
+      const items = document.getElementById('itemsInput').value.split(',').map(item => item.trim()).filter(Boolean);
+
+      if (isNaN(totalAmount) || items.length === 0) {
+        document.getElementById('productsBody').innerHTML = `
+          <tr>
+            <td colspan="3" class="py-4 px-4 border border-gray-300 text-center text-gray-500">No Items Added</td>
+          </tr>
+        `;
+        document.getElementById('grandTotal').textContent = '0.00';
+        document.getElementById('totalInWords').textContent = 'Zero Rupees Only';
+        return;
+      }
+
+      const percentages = generateRandomPercentages(items.length);
+      let tbody = '';
+      let grandTotal = 0;
+
+      items.forEach((item, index) => {
+        const amount = (totalAmount * percentages[index]) / 100;
+        grandTotal += amount;
+        tbody += `
+          <tr class="hover:bg-gray-50">
+            <td class="py-2 px-4 border border-gray-800 text-center">${index + 1}</td>
+            <td class="py-2 px-4 border border-gray-800">${item}</td>
+            <td class="py-2 px-4 border border-gray-800 text-right">₹${amount.toFixed(2)}</td>
+          </tr>
+        `;
+      });
+
+      // Add total row
+      tbody += `
+        <tr class="bg-gray-100 font-semibold">
+          <td colspan="2" class="py-2 px-4 border border-gray-800 text-right">SubTotal:</td>
+          <td class="py-2 px-4 border border-gray-800 text-right">₹${grandTotal.toFixed(2)}</td>
+        </tr>
+      `;
+
+      document.getElementById('productsBody').innerHTML = tbody;
+      document.getElementById('grandTotal').textContent = grandTotal.toFixed(2);
+      document.getElementById('totalInWords').textContent = numberToWords(Math.floor(grandTotal)) + ' Rupees Only';
+    }
+
+    function generateRandomPercentages(n) {
+      let total = 100;
+      const result = [];
+      for (let i = 0; i < n - 1; i++) {
+        const value = Math.floor(Math.random() * (total / (n - i))) + 1;
+        result.push(value);
+        total -= value;
+      }
+      result.push(total);
+      return result;
+    }
+
+    function numberToWords(num) {
+      const a = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine",
+                 "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen",
+                 "Seventeen", "Eighteen", "Nineteen"];
+      const b = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
+
+      if (num === 0) return "Zero";
+
+      if (num < 20) return a[num];
+      if (num < 100) return b[Math.floor(num / 10)] + (num % 10 ? " " + a[num % 10] : "");
+      if (num < 1000) return a[Math.floor(num / 100)] + " Hundred " + (num % 100 ? numberToWords(num % 100) : "");
+      if (num < 100000) return numberToWords(Math.floor(num / 1000)) + " Thousand " + numberToWords(num % 1000);
+      if (num < 10000000) return numberToWords(Math.floor(num / 100000)) + " Lakh " + numberToWords(num % 100000);
+      return "Amount too large";
+    }
+
+    async function generatePDF() {
+      const invoice = document.getElementById("invoicePreview");
+      
+      // Set the invoice to full A4 size for PDF generation
+      invoice.classList.add('shadow-none');
+      
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF({
+        unit: 'mm',
+        format: 'a4',
+        orientation: 'portrait'
+      });
+      
+      const canvas = await html2canvas(invoice, {
+        scale: 2,
+        logging: false,
+        useCORS: true,
+        allowTaint: true,
+        scrollX: 0,
+        scrollY: 0,
+        windowWidth: invoice.scrollWidth,
+        windowHeight: invoice.scrollHeight
+      });
+      
+      const imgData = canvas.toDataURL('image/png', 1.0);
+      const imgWidth = 210; // A4 width in mm
+      const pageHeight = 295; // A4 height in mm
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      
+      // Center the image on the page
+      const position = 0;
+      
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      
+      // Remove the shadow-none class after PDF generation
+      invoice.classList.remove('shadow-none');
+      
+      pdf.save('invoice.pdf');
+    }
+  </script>
+</body>
+</html>
