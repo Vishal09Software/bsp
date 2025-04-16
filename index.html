@@ -41,14 +41,10 @@
           padding:5px;
           margin:5px;
         }
-        table {
-          border-collapse: collapse;
-          width: 100%;
-        }
+        
         th, td {
-          border: 1px solid #000 !important;
           text-align: center;
-          padding: 3px !important;
+          padding: 1px !important;
         }
       }
     }
@@ -125,7 +121,7 @@
       <div class="w-full lg:w-7/12 no-print">
         <div class="bg-gray-200 p-4 rounded-lg shadow-inner h-[calc(170vh-2rem)] ">
           <div class="h-full">
-            <div class="invoice-page bg-white mx-auto" id="invoicePreview" style="padding:10px">
+            <div class="invoice-page bg-white mx-auto" id="invoicePreview" style="padding:50px">
               <table class="h-full" style="border: 1px solid #000;width:100%">
                 <tr>
                   <td>
@@ -152,7 +148,7 @@
       
                       <!-- Items Table - Enhanced Design -->
                       <div class="flex-grow relative">
-                        <table class="w-full border-collapse">
+                        <table class="w-full border-collapse" style="border: 1px solid #000;border-collapse: collapse;">
                           <thead>
                             <tr class="bg-gray-100">
                               <th class="py-3 px-4 border border-gray-800 text-center font-bold text-gray-800 w-1/12">S.NO</th>
@@ -206,7 +202,7 @@
                       </div>
       
                       <!-- Footer - Enhanced Design -->
-                      <div class="mb-6 border-t-2 border-gray-400 pt-4 absolute bottom-0" style="width:90%;">
+                      <div class="border-t-2 border-gray-400 pt-4 absolute bottom-16" style="width:80%;">
                         <div class="flex flex-wrap">
                           <div class="w-full md:w-7/12 pr-4">
                             <h4 class="font-bold text-gray-800 mb-2 underline">TERMS & CONDITIONS:</h4>
