@@ -28,6 +28,7 @@
         body {
           margin: 0;
           padding: 0;
+          font-weight: bold;
         }
         .no-print {
           display: none !important;
@@ -37,9 +38,10 @@
           height: 100%;
           margin: 0;
           box-shadow: none;
-          border: 1px solid #000;
+          border: 2px solid #000;
           padding:5px;
           margin:5px;
+          font-weight: bold;
         }
         
         th, td {
@@ -129,19 +131,19 @@
                       <!-- Enhanced Header -->
                       <div class="text-center mb-6 border-b-4 border-gray-800 pb-4">
                         <h1 id="pCompanyName" class="text-3xl font-bold text-gray-800 uppercase">Demo Company Pvt. Ltd.</h1>
-                        <div id="pCompanyEmail" class="text-gray-600 mt-1">demo@company.com</div>
-                        <div id="pCompanyAddress" class="text-gray-600">123 Business Rd, Business City</div>
-                        <div class="mt-4 font-bold text-xl underline">INVOICE</div>
+                        <div id="pCompanyEmail" class="text-gray-600 font-bold mt-1">demo@company.com</div>
+                        <div id="pCompanyAddress" class="text-gray-600 font-bold">123 Business Rd, Business City</div>
+                        <div class="mt-4 font-bold text-xl underline  ">INVOICE</div>
                       </div>
       
                       <!-- Invoice Info - Enhanced Format -->
-                      <div class="grid grid-cols-2 gap-4 mb-6 border-b-2 border-gray-400 pb-4">
+                      <div class="grid grid-cols-2 gap-4 mb-6 border-b-2 border-gray-800 pb-4">
                         <div>
-                          <div class="text-gray-700"><span class="font-semibold">Name:</span> <span id="pCustomerName">भारतीय सामाजिक पार्टी</span></div>
+                          <div class="text-gray-700"><span class="font-bold">Name:</span> <span id="pCustomerName" class="font-bold">BHARTIYA SAMAJIK PARTY</span></div>
                         </div>
                         <div>
-                          <div class="text-gray-700"><span class="font-semibold">Invoice No:</span> <span id="pInvoiceNo">---</span></div>
-                          <div class="text-gray-700 mt-1"><span class="font-semibold">Date:</span> <span id="pInvoiceDate">---</span></div>
+                          <div class="text-gray-700"><span class="font-bold">Invoice No:</span> <span id="pInvoiceNo">---</span></div>
+                          <div class="text-gray-700 mt-1"><span class="font-bold">Date:</span> <span id="pInvoiceDate">---</span></div>
                         </div>
                         
                       </div>
@@ -160,40 +162,40 @@
                           <!-- Products List -->
                           <tbody id="productsBody">
                             <tr>
-                              <td class="p-2 border border-gray-800 text-center">1</td>
-                              <td class="p-2 border border-gray-800 text-left">No Items Added</td>
-                              <td class="p-2 border border-gray-800 text-right">₹0.00</td>
+                              <td class="p-2 border border-gray-800 text-center font-bold">1</td>
+                              <td class="p-2 border border-gray-800 text-left font-bold">No Items Added</td>
+                              <td class="p-2 border border-gray-800 text-right font-bold">₹0.00</td>
                             </tr>
                           </tbody>
                       
                           <!-- Totals and Summary - Enhanced Design -->
                           <tbody>
                             <tr>
-                              <td colspan="2" class="py-2 px-4 border border-gray-800 text-right font-semibold text-gray-800">TOTAL:</td>
-                              <td class="py-2 px-4 border border-gray-800 text-right text-gray-800 font-semibold">₹<span id="subtotalAmount">0.00</span></td>
+                              <td colspan="2" class="py-2 px-4 border border-gray-800 text-right font-bold text-gray-800">TOTAL:</td>
+                              <td class="py-2 px-4 border border-gray-800 text-right text-gray-800 font-bold">₹<span id="subtotalAmount">0.00</span></td>
                             </tr>
                             <tr>
-                              <td colspan="2" class="py-2 px-4 border border-gray-800 text-right font-semibold text-gray-800">Less Discount:</td>
-                              <td class="py-2 px-4 border border-gray-800 text-right text-gray-800">₹<span id="discountAmount">0.00</span></td>
+                              <td colspan="2" class="py-2 px-4 border border-gray-800 text-right font-bold text-gray-800">Less Discount:</td>
+                              <td class="py-2 px-4 border border-gray-800 text-right text-gray-800 font-bold">₹<span id="discountAmount">0.00</span></td>
                             </tr>
                             <tr>
-                              <td colspan="2" class="py-2 px-4 border border-gray-800 text-right font-semibold text-gray-800">Add Freight:</td>
-                              <td class="py-2 px-4 border border-gray-800 text-right text-gray-800">₹<span id="freightAmount">0.00</span></td>
+                              <td colspan="2" class="py-2 px-4 border border-gray-800 text-right font-bold text-gray-800">Add Freight:</td>
+                              <td class="py-2 px-4 border border-gray-800 text-right text-gray-800 font-bold">₹<span id="freightAmount">0.00</span></td>
                             </tr>
                             <tr>
-                              <td colspan="2" class="py-2 px-4 border border-gray-800 text-right font-semibold text-gray-800">Sub Total:</td>
-                              <td class="py-2 px-4 border border-gray-800 text-right text-gray-800 font-semibold">₹<span id="afterFreightAmount">0.00</span></td>
+                              <td colspan="2" class="py-2 px-4 border border-gray-800 text-right font-bold text-gray-800">Sub Total:</td>
+                              <td class="py-2 px-4 border border-gray-800 text-right text-gray-800 font-bold">₹<span id="afterFreightAmount">0.00</span></td>
                             </tr>
                             <tr>
-                              <td colspan="2" class="py-2 px-4 border border-gray-800 text-right font-semibold text-gray-800">Add Other:</td>
-                              <td class="py-2 px-4 border border-gray-800 text-right text-gray-800">₹<span id="otherCharges">0.00</span></td>
+                              <td colspan="2" class="py-2 px-4 border border-gray-800 text-right font-bold text-gray-800">Add Other:</td>
+                              <td class="py-2 px-4 border border-gray-800 text-right text-gray-800 font-bold">₹<span id="otherCharges">0.00</span></td>
                             </tr>
                             <tr class="font-bold">
                               <td colspan="2" class="py-3 px-4 border border-gray-800 text-right text-gray-800">
                                 <span class="text-sm italic font-normal">Amount in words:</span><br>
                                 <span id="totalInWords" class="italic"> Zero Rupees Only</span>
                               </td>
-                              <td class="py-3 px-4 border border-gray-800 text-right text-gray-800">
+                              <td class="py-3 px-4 border border-gray-800 text-right text-gray-800 font-bold">
                                 <div>Grand Amount:<br>₹<span id="grandTotal">0.00</span></div>
                               </td>
                             </tr>
@@ -202,21 +204,21 @@
                       </div>
       
                       <!-- Footer - Enhanced Design -->
-                      <div class="border-t-2 border-gray-400 pt-4 absolute bottom-16" style="width:80%;">
+                      <div class="border-t-2 border-gray-800 pt-4 absolute bottom-16" style="width:80%;">
                         <div class="flex flex-wrap">
                           <div class="w-full md:w-7/12 pr-4">
                             <h4 class="font-bold text-gray-800 mb-2 underline">TERMS & CONDITIONS:</h4>
                             <ol class="list-decimal pl-5 text-sm text-gray-700">
-                              <li class="mb-1">Goods once sold will not be taken back</li>
-                              <li class="mb-1">No responsibility for breakages during transit</li>
-                              <li class="mb-1">All disputes are subject to Mumbai Jurisdiction only</li>
-                              <li class="mb-1">E.&O.E.</li>
+                              <li class="mb-1 font-bold">Goods once sold will not be taken back</li>
+                              <li class="mb-1 font-bold">No responsibility for breakages during transit</li>
+                              <li class="mb-1 font-bold">All disputes are subject to District Jurisdiction only</li>
+                              <li class="mb-1 font-bold">E.&O.E.</li>
                             </ol>
                           </div>
                           <div class="w-full md:w-5/12 mt-4 md:mt-0 text-right">
-                            <div class="text-gray-700 mt-6">FOR - <span id="pCompanyNameFooter" class="font-semibold text-gray-800">Demo Company Pvt. Ltd.</span></div>
+                            <div class="text-gray-700 mt-6 font-bold">FOR - <span id="pCompanyNameFooter" class="font-bold text-gray-800">Demo Company Pvt. Ltd.</span></div>
                             <div class="h-8"></div>
-                            <div class="text-gray-700">AUTHORISED SIGNATORY</div>
+                            <div class="text-gray-700 font-bold ">AUTHORISED SIGNATORY</div>
                             <div class="signature-line ml-auto"></div>
                           </div>
                         </div>
@@ -238,7 +240,7 @@
 
   <script>
     // Initialize customer fields
-    document.getElementById('pCustomerName').textContent = "भारतीय सामाजिक पार्टी";
+    document.getElementById('pCustomerName').textContent = "BHARTIYA SAMAJIK PARTY";
     document.getElementById('pCustomerAddress').textContent = "---";
     document.getElementById('pCustomerMobile').textContent = "---";
 
