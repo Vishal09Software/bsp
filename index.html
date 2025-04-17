@@ -36,6 +36,7 @@
         .invoice-page {
           width: 100%;
           height: 100%;
+          margin: 0;
           box-shadow: none;
           border: 2px solid #000;
           padding:5px;
@@ -123,7 +124,7 @@
         <div class="bg-gray-200 p-4 rounded-lg shadow-inner h-[calc(170vh-2rem)] ">
           <div class="h-full">
             <div class="invoice-page bg-white mx-auto" id="invoicePreview" style="padding:50px">
-              <table class="h-full" style="border: px solid #000;width:100%">
+              <table class="h-full" style="border: 1px solid #000;width:100%">
                 <tr>
                   <td>
                     <div class="p-6 h-full flex flex-col">
@@ -141,8 +142,8 @@
                           <div class="text-gray-700"><span class="font-bold">Name:</span> <span id="pCustomerName" class="font-bold">BHARTIYA SAMAJIK PARTY</span></div>
                         </div>
                         <div>
-                          <div class="text-gray-700" style="margin-left: 70px;"><span class="font-bold">Invoice No:</span> <span id="pInvoiceNo">---</span></div>
-                          <div class="text-gray-700 mt-1" style="margin-left: 70px;"><span class="font-bold">Date:</span> <span id="pInvoiceDate">---</span></div>
+                          <div class="text-gray-700 text-right "><span class="font-bold">Invoice No:</span> <span id="pInvoiceNo">---</span></div>
+                          <div class="text-gray-700 mt-1 text-right"><span class="font-bold">Date:</span> <span id="pInvoiceDate">---</span></div>
                         </div>
                         
                       </div>
@@ -236,6 +237,7 @@
   <!-- JS Libraries -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
   <script>
     // Initialize customer fields
     document.getElementById('pCustomerName').textContent = "BHARTIYA SAMAJIK PARTY";
@@ -263,6 +265,7 @@
       }
     }
 
+
     function processParticulars() {
       const totalAmount = parseFloat(document.getElementById('totalAmount').value);
       const items = document.getElementById('itemsInput').value.split(',').map(item => item.trim()).filter(Boolean);
@@ -275,12 +278,13 @@
       if (isNaN(totalAmount) || items.length === 0) {
         document.getElementById('productsBody').innerHTML = `
           <tr>
-            <td class="p-2 border border-gray-800 text-center">1</td>
-            <td class="p-2 border border-gray-800 relative">
+            <td class="p-2 border border-gray-800 text-center font-bold">1</td>
+            <td class="p-2 border border-gray-800 relative font-bold">
               <div>No Items Added</div>
             </td>
-            <td class="p-2 border border-gray-800 text-right">₹0.00</td>
+            <td class="p-2 border border-gray-800 text-right font-bold">₹0.00</td>
           </tr>
+         
         `;
         document.getElementById('subtotalAmount').textContent = '0.00';
         document.getElementById('discountAmount').textContent = '0.00';
@@ -292,7 +296,7 @@
         return;
       }
 
-      const percentages = generateBalancedPercentages(items.length);
+      const percentages = generateRandomPercentages(items.length);
       let tbody = '';
       let grandTotal = 0;
 
@@ -300,13 +304,25 @@
         const amount = (totalAmount * percentages[index]) / 100;
         grandTotal += amount;
         
-        tbody += `
-          <tr>
-            <td class="py-1 px-4 border border-gray-800 text-center font-bold">${index + 1}</td>
-            <td class="py-1 px-4 border border-gray-800 font-bold">${item}</td>
-            <td class="py-1 px-4 border border-gray-800 text-right font-bold">₹${Math.round(amount)}</td>
-          </tr>
-        `;
+        if (index === 0) {
+          tbody += `
+            <tr>
+              <td class="py-1 px-4 border border-gray-800 text-center font-bold">${index + 1}</td>
+              <td class="py-1 px-4 border border-gray-800 relative font-bold">
+                ${item}
+              </td>
+              <td class="py-1 px-4 border border-gray-800 text-right font-bold">₹${amount.toFixed(2)}</td>
+            </tr>
+          `;
+        } else {
+          tbody += `
+            <tr>
+              <td class="py-1 px-4 border border-gray-800 text-center font-bold">${index + 1}</td>
+              <td class="py-1 px-4 border border-gray-800 font-bold">${item}</td>
+              <td class="py-1 px-4 border border-gray-800 text-right font-bold">₹${amount.toFixed(2)}</td>
+            </tr>
+          `;
+        }
       });
 
       // Add empty rows if needed
@@ -344,37 +360,15 @@
       document.getElementById('totalInWords').textContent = numberToWords(Math.floor(final)) + ' Rupees Only';
     }
 
-    function generateBalancedPercentages(n) {
-      const MIN_PERCENTAGE = 15;
+    function generateRandomPercentages(n) {
+      let total = 100;
       const result = [];
-      let remaining = 100;
-      
-      // First, assign minimum 15% to each item
-      for (let i = 0; i < n; i++) {
-        result.push(MIN_PERCENTAGE);
-        remaining -= MIN_PERCENTAGE;
+      for (let i = 0; i < n - 1; i++) {
+        const value = Math.floor(Math.random() * (total / (n - i))) + 1;
+        result.push(value);
+        total -= value;
       }
-      
-      // If we have remaining percentage to distribute
-      if (remaining > 0) {
-        // Calculate maximum possible percentage per item
-        const maxAdditionalPerItem = Math.floor(remaining / n);
-        
-        // Distribute remaining percentage randomly
-        for (let i = 0; i < n; i++) {
-          const additional = Math.floor(Math.random() * (maxAdditionalPerItem + 1));
-          result[i] += additional;
-          remaining -= additional;
-        }
-        
-        // Distribute any remaining percentage randomly
-        while (remaining > 0) {
-          const randomIndex = Math.floor(Math.random() * n);
-          result[randomIndex]++;
-          remaining--;
-        }
-      }
-      
+      result.push(total);
       return result;
     }
 
@@ -439,6 +433,3 @@
   </script>
 </body>
 </html>
-
-
-
