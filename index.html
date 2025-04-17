@@ -36,7 +36,6 @@
         .invoice-page {
           width: 100%;
           height: 100%;
-          margin: 0;
           box-shadow: none;
           border: 2px solid #000;
           padding:5px;
@@ -171,31 +170,31 @@
                           <!-- Totals and Summary - Enhanced Design -->
                           <tbody>
                             <tr>
-                              <td colspan="2" class="py-2 px-4 border border-gray-800 text-right font-bold text-gray-800">TOTAL:</td>
-                              <td class="py-2 px-4 border border-gray-800 text-right text-gray-800 font-bold">₹<span id="subtotalAmount">0.00</span></td>
+                              <td colspan="2" class="py-2 px-2 border border-gray-800 text-right font-bold text-gray-800">TOTAL:</td>
+                              <td class="py-2 px-2 border border-gray-800 text-right text-gray-800 font-bold">₹<span id="subtotalAmount">0.00</span></td>
                             </tr>
                             <tr>
-                              <td colspan="2" class="py-2 px-4 border border-gray-800 text-right font-bold text-gray-800">Less Discount:</td>
-                              <td class="py-2 px-4 border border-gray-800 text-right text-gray-800 font-bold">₹<span id="discountAmount">0.00</span></td>
+                              <td colspan="2" class="py-2 px-2 border border-gray-800 text-right font-bold text-gray-800">Less Discount:</td>
+                              <td class="py-2 px-2 border border-gray-800 text-right text-gray-800 font-bold">₹<span id="discountAmount">0.00</span></td>
                             </tr>
                             <tr>
-                              <td colspan="2" class="py-2 px-4 border border-gray-800 text-right font-bold text-gray-800">Add Freight:</td>
-                              <td class="py-2 px-4 border border-gray-800 text-right text-gray-800 font-bold">₹<span id="freightAmount">0.00</span></td>
+                              <td colspan="2" class="py-2 px-2 border border-gray-800 text-right font-bold text-gray-800">Add Freight:</td>
+                              <td class="py-2 px-2 border border-gray-800 text-right text-gray-800 font-bold">₹<span id="freightAmount">0.00</span></td>
                             </tr>
                             <tr>
-                              <td colspan="2" class="py-2 px-4 border border-gray-800 text-right font-bold text-gray-800">Sub Total:</td>
-                              <td class="py-2 px-4 border border-gray-800 text-right text-gray-800 font-bold">₹<span id="afterFreightAmount">0.00</span></td>
+                              <td colspan="2" class="py-2 px-2 border border-gray-800 text-right font-bold text-gray-800">Sub Total:</td>
+                              <td class="py-2 px-2 border border-gray-800 text-right text-gray-800 font-bold">₹<span id="afterFreightAmount">0.00</span></td>
                             </tr>
                             <tr>
-                              <td colspan="2" class="py-2 px-4 border border-gray-800 text-right font-bold text-gray-800">Add Other:</td>
-                              <td class="py-2 px-4 border border-gray-800 text-right text-gray-800 font-bold">₹<span id="otherCharges">0.00</span></td>
+                              <td colspan="2" class="py-2 px-2 border border-gray-800 text-right font-bold text-gray-800">Add Other:</td>
+                              <td class="py-2 px-2 border border-gray-800 text-right text-gray-800 font-bold">₹<span id="otherCharges">0.00</span></td>
                             </tr>
                             <tr class="font-bold">
-                              <td colspan="2" class="py-3 px-4 border border-gray-800 text-right text-gray-800">
+                              <td colspan="2" class="py-2 px-2 border border-gray-800 text-right text-gray-800">
                                 <span class="text-sm italic font-normal">Amount in words:</span><br>
                                 <span id="totalInWords" class="italic"> Zero Rupees Only</span>
                               </td>
-                              <td class="py-3 px-4 border border-gray-800 text-right text-gray-800 font-bold">
+                              <td class="py-2 px-2 border border-gray-800 text-right text-gray-800 font-bold">
                                 <div>Grand Amount:<br>₹<span id="grandTotal">0.00</span></div>
                               </td>
                             </tr>
@@ -237,7 +236,6 @@
   <!-- JS Libraries -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
   <script>
     // Initialize customer fields
     document.getElementById('pCustomerName').textContent = "BHARTIYA SAMAJIK PARTY";
@@ -265,7 +263,6 @@
       }
     }
 
-
     function processParticulars() {
       const totalAmount = parseFloat(document.getElementById('totalAmount').value);
       const items = document.getElementById('itemsInput').value.split(',').map(item => item.trim()).filter(Boolean);
@@ -284,7 +281,6 @@
             </td>
             <td class="p-2 border border-gray-800 text-right">₹0.00</td>
           </tr>
-         
         `;
         document.getElementById('subtotalAmount').textContent = '0.00';
         document.getElementById('discountAmount').textContent = '0.00';
@@ -296,7 +292,7 @@
         return;
       }
 
-      const percentages = generateRandomPercentages(items.length);
+      const percentages = generateBalancedPercentages(items.length);
       let tbody = '';
       let grandTotal = 0;
 
@@ -304,25 +300,13 @@
         const amount = (totalAmount * percentages[index]) / 100;
         grandTotal += amount;
         
-        if (index === 0) {
-          tbody += `
-            <tr>
-              <td class="py-3 px-4 border border-gray-800 text-center">${index + 1}</td>
-              <td class="py-3 px-4 border border-gray-800 relative">
-                ${item}
-              </td>
-              <td class="py-3 px-4 border border-gray-800 text-right">₹${amount.toFixed(2)}</td>
-            </tr>
-          `;
-        } else {
-          tbody += `
-            <tr>
-              <td class="py-3 px-4 border border-gray-800 text-center">${index + 1}</td>
-              <td class="py-3 px-4 border border-gray-800">${item}</td>
-              <td class="py-3 px-4 border border-gray-800 text-right">₹${amount.toFixed(2)}</td>
-            </tr>
-          `;
-        }
+        tbody += `
+          <tr>
+            <td class="py-1 px-4 border border-gray-800 text-center">${index + 1}</td>
+            <td class="py-1 px-4 border border-gray-800">${item}</td>
+            <td class="py-1 px-4 border border-gray-800 text-right"><strong>₹${Math.round(amount)}</strong></td>
+          </tr>
+        `;
       });
 
       // Add empty rows if needed
@@ -360,15 +344,37 @@
       document.getElementById('totalInWords').textContent = numberToWords(Math.floor(final)) + ' Rupees Only';
     }
 
-    function generateRandomPercentages(n) {
-      let total = 100;
+    function generateBalancedPercentages(n) {
+      const MIN_PERCENTAGE = 15;
       const result = [];
-      for (let i = 0; i < n - 1; i++) {
-        const value = Math.floor(Math.random() * (total / (n - i))) + 1;
-        result.push(value);
-        total -= value;
+      let remaining = 100;
+      
+      // First, assign minimum 15% to each item
+      for (let i = 0; i < n; i++) {
+        result.push(MIN_PERCENTAGE);
+        remaining -= MIN_PERCENTAGE;
       }
-      result.push(total);
+      
+      // If we have remaining percentage to distribute
+      if (remaining > 0) {
+        // Calculate maximum possible percentage per item
+        const maxAdditionalPerItem = Math.floor(remaining / n);
+        
+        // Distribute remaining percentage randomly
+        for (let i = 0; i < n; i++) {
+          const additional = Math.floor(Math.random() * (maxAdditionalPerItem + 1));
+          result[i] += additional;
+          remaining -= additional;
+        }
+        
+        // Distribute any remaining percentage randomly
+        while (remaining > 0) {
+          const randomIndex = Math.floor(Math.random() * n);
+          result[randomIndex]++;
+          remaining--;
+        }
+      }
+      
       return result;
     }
 
@@ -433,3 +439,6 @@
   </script>
 </body>
 </html>
+
+
+
